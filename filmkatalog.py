@@ -174,7 +174,9 @@ def zeige_menue():
     print("2. Filme anzeigen")
     print("3. Film suchen")
     print("4. Film löschen")
-    print("5. Beenden")
+    print("5. Film bearbeiten")
+    print("6. Katalog neu laden")
+    print("7. Beenden")
     print("------------------------")
 
 def main():
@@ -197,11 +199,63 @@ def main():
         elif wahl == '4':
             film_loeschen()
         elif wahl == '5':
+            film_bearbeiten()
+        elif wahl == '6':
+            katalog_laden()
+        elif wahl == '7':
             katalog_speichern() # Katalog vor dem Beenden speichern
             print("Programm wird beendet. Auf Wiedersehen!")
             break
         else:
             print("Ungültige Eingabe. Bitte versuchen Sie es erneut.")
+# Neue Funktion: Film bearbeiten
+def film_bearbeiten():
+    """
+    Ermöglicht das Bearbeiten eines bestehenden Films im Katalog.
+    Der Benutzer kann einzelne Felder (Regisseur, Jahr, Genre, Bewertung) ändern.
+    """
+    print("\n--- Film bearbeiten ---")
+    titel = input("Titel des zu bearbeitenden Films: ")
+    if titel not in filme:
+        print(f"Fehler: Film '{titel}' nicht im Katalog gefunden.")
+        return
+
+    details = filme[titel]
+    print(f"Aktuelle Daten für '{titel}':")
+    print(f"  Regisseur: {details.get('regisseur', 'N/A')}")
+    print(f"  Jahr: {details.get('jahr', 'N/A')}")
+    print(f"  Genre: {details.get('genre', 'N/A')}")
+    print(f"  Bewertung: {details.get('bewertung', 'N/A')}")
+
+    # Felder abfragen und ggf. aktualisieren
+    neuer_regisseur = input("Neuer Regisseur (leer lassen für keine Änderung): ")
+    if neuer_regisseur:
+        details['regisseur'] = neuer_regisseur
+
+    neues_jahr = input("Neues Erscheinungsjahr (leer lassen für keine Änderung): ")
+    if neues_jahr:
+        try:
+            details['jahr'] = int(neues_jahr)
+        except ValueError:
+            print("Ungültige Eingabe. Jahr bleibt unverändert.")
+
+    neues_genre = input("Neues Genre (leer lassen für keine Änderung): ")
+    if neues_genre:
+        details['genre'] = neues_genre
+
+    neue_bewertung = input("Neue Bewertung (1-5, leer lassen für keine Änderung): ")
+    if neue_bewertung:
+        try:
+            neue_bewertung_int = int(neue_bewertung)
+            if 1 <= neue_bewertung_int <= 5:
+                details['bewertung'] = neue_bewertung_int
+            else:
+                print("Ungültige Bewertung. Wert bleibt unverändert.")
+        except ValueError:
+            print("Ungültige Eingabe. Bewertung bleibt unverändert.")
+
+    filme[titel] = details
+    print(f"Film '{titel}' wurde aktualisiert.")
 
 # Startet das Hauptprogramm, wenn die Datei direkt ausgeführt wird
 if __name__ == "__main__":
